@@ -15,4 +15,16 @@ describe("readConfig", () => {
   it("reports a missing API key", () => {
     expect(() => readConfig({})).toThrow("OPENAI_API_KEY is required");
   });
+
+  it.each(["abc", "0", "65536", "3001.5"])(
+    "rejects invalid SERVER_PORT value %s",
+    (serverPort) => {
+      expect(() =>
+        readConfig({
+          OPENAI_API_KEY: "test-key",
+          SERVER_PORT: serverPort
+        })
+      ).toThrow("SERVER_PORT must be an integer between 1 and 65535");
+    }
+  );
 });

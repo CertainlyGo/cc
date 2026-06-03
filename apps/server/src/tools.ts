@@ -4,7 +4,7 @@ import { z } from "zod";
 const calculatorPattern = /^[\d\s+\-*/().%]+$/;
 
 export function calculateExpression(expression: string): string {
-  if (!calculatorPattern.test(expression)) {
+  if (!calculatorPattern.test(expression) || expression.includes("**")) {
     return "Invalid calculator expression. Use only numbers and arithmetic operators.";
   }
 
