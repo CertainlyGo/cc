@@ -1,8 +1,39 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import type { ChatRequest } from "@ts-react-agent/shared";
-import type { AppConfig } from "./config";
-import { createAgentTools } from "./tools";
+import type { AppConfig } from "./config.js";
+import { createAgentTools } from "./tools.js";
+
+export function formatMessageContent(content: unknown): string {
+  if (typeof content === "string") {
+    return content;
+  }
+
+  if (Array.isArray(content)) {
+    const text = content
+      .flatMap((block) => {
+        if (
+          typeof block === "object" &&
+          block !== null &&
+          "type" in block &&
+          block.type === "text" &&
+          "text" in block &&
+          typeof block.text === "string"
+        ) {
+          return [block.text];
+        }
+
+        return [];
+      })
+      .join("\n");
+
+    if (text) {
+      return text;
+    }
+  }
+
+  return JSON.stringify(content ?? "");
+}
 
 export function createAgentRunner(config: AppConfig) {
   const model = new ChatOpenAI({
@@ -31,8 +62,7 @@ export function createAgentRunner(config: AppConfig) {
     });
 
     const lastMessage = result.messages.at(-1);
-    const content = lastMessage?.content;
 
-    return typeof content === "string" ? content : JSON.stringify(content ?? "");
+    return formatMessageContent(lastMessage?.content);
   };
 }

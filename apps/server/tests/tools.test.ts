@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateExpression, createAgentTools, getCurrentTimeText } from "../src/tools";
+import { calculateExpression, createAgentTools, getCurrentTimeText } from "../src/tools.js";
 
 type CalculatorTool = {
   invoke(input: { expression: string }): Promise<unknown>;

@@ -16,8 +16,8 @@ export function readConfig(env: Env): AppConfig {
   const portText = env.SERVER_PORT ?? "3001";
   const port = Number(portText);
 
-  if (!Number.isInteger(port) || port < 1 || port > 65535) {
-    throw new Error("SERVER_PORT must be an integer between 1 and 65535");
+  if (!Number.isInteger(port) || port < 0 || port > 65535) {
+    throw new Error("SERVER_PORT must be an integer between 0 and 65535");
   }
 
   return {

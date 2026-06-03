@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { readConfig } from "../src/config";
+import { readConfig } from "../src/config.js";
 
 describe("readConfig", () => {
   it("reads defaults and required API key", () => {
@@ -16,7 +16,16 @@ describe("readConfig", () => {
     expect(() => readConfig({})).toThrow("OPENAI_API_KEY is required");
   });
 
-  it.each(["abc", "0", "65536", "3001.5"])(
+  it("allows port 0 for ephemeral server binding", () => {
+    const config = readConfig({
+      OPENAI_API_KEY: "test-key",
+      SERVER_PORT: "0"
+    });
+
+    expect(config.port).toBe(0);
+  });
+
+  it.each(["abc", "-1", "65536", "3001.5"])(
     "rejects invalid SERVER_PORT value %s",
     (serverPort) => {
       expect(() =>
@@ -24,7 +33,7 @@ describe("readConfig", () => {
           OPENAI_API_KEY: "test-key",
           SERVER_PORT: serverPort
         })
-      ).toThrow("SERVER_PORT must be an integer between 1 and 65535");
+      ).toThrow("SERVER_PORT must be an integer between 0 and 65535");
     }
   );
 });

@@ -1,6 +1,6 @@
 import Fastify from "fastify";
 import { describe, expect, it } from "vitest";
-import { registerRoutes, type AgentRunner } from "../src/routes";
+import { registerRoutes, type AgentRunner } from "../src/routes.js";
 
 function buildTestServer(agentRunner: AgentRunner) {
   const server = Fastify();
@@ -55,5 +55,76 @@ describe("routes", () => {
 
     expect(response.statusCode).toBe(400);
     expect(response.json()).toEqual({ error: "message is required" });
+  });
+
+  it("rejects a non-string message", async () => {
+    const server = buildTestServer(async () => "unused");
+
+    const response = await server.inject({
+      method: "POST",
+      url: "/api/chat",
+      payload: {
+        message: 42
+      }
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toEqual({ error: "message is required" });
+  });
+
+  it("rejects a non-string session ID", async () => {
+    const server = buildTestServer(async () => "unused");
+
+    const response = await server.inject({
+      method: "POST",
+      url: "/api/chat",
+      payload: {
+        message: "hello",
+        sessionId: 42
+      }
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toEqual({ error: "sessionId must be a string" });
+  });
+
+  it("generates a session ID when omitted", async () => {
+    let receivedSessionId = "";
+    const server = buildTestServer(async ({ sessionId }) => {
+      receivedSessionId = sessionId;
+      return "reply";
+    });
+
+    const response = await server.inject({
+      method: "POST",
+      url: "/api/chat",
+      payload: {
+        message: "hello"
+      }
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toEqual({
+      message: "reply",
+      sessionId: receivedSessionId
+    });
+    expect(receivedSessionId).toMatch(/^session-/);
+  });
+
+  it("returns a generic error when the agent runner fails", async () => {
+    const server = buildTestServer(async () => {
+      throw new Error("secret provider failure");
+    });
+
+    const response = await server.inject({
+      method: "POST",
+      url: "/api/chat",
+      payload: {
+        message: "hello"
+      }
+    });
+
+    expect(response.statusCode).toBe(500);
+    expect(response.json()).toEqual({ error: "agent request failed" });
   });
 });

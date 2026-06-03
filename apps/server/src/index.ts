@@ -1,8 +1,8 @@
 import cors from "@fastify/cors";
 import Fastify from "fastify";
-import { createAgentRunner } from "./agent";
-import { readConfig } from "./config";
-import { registerRoutes } from "./routes";
+import { createAgentRunner } from "./agent.js";
+import { readConfig } from "./config.js";
+import { registerRoutes } from "./routes.js";
 
 async function main() {
   const config = readConfig(process.env);
