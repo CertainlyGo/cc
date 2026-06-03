@@ -1,0 +1,25 @@
+{
+  "name": "@ts-react-agent/server",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.json",
+    "lint": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.0.1",
+    "@langchain/core": "^0.3.66",
+    "@langchain/langgraph": "^0.4.4",
+    "@langchain/openai": "^0.6.9",
+    "@ts-react-agent/shared": "file:../../packages/shared",
+    "fastify": "^5.4.0",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}
