@@ -1,0 +1,247 @@
+:root {
+  color: #172026;
+  background: #eef3f7;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    linear-gradient(135deg, rgba(41, 92, 115, 0.14), transparent 38%),
+    linear-gradient(315deg, rgba(191, 94, 67, 0.13), transparent 34%),
+    #eef3f7;
+}
+
+.chat-panel {
+  width: min(920px, 100%);
+  height: min(760px, calc(100vh - 48px));
+  min-height: 520px;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  overflow: hidden;
+  border: 1px solid #cfdae3;
+  border-radius: 8px;
+  background: #f9fbfc;
+  box-shadow: 0 18px 42px rgba(23, 32, 38, 0.13);
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px;
+  border-bottom: 1px solid #dce5eb;
+  background: #ffffff;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: #526977;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.45rem, 4vw, 2rem);
+  line-height: 1.1;
+}
+
+.session-pill {
+  flex: 0 0 auto;
+  max-width: 150px;
+  overflow: hidden;
+  border: 1px solid #b9c9d3;
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: #2c5565;
+  background: #e8f2f5;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.message-list {
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px;
+}
+
+.empty-state,
+.loading-state {
+  margin: auto;
+  color: #526977;
+  text-align: center;
+}
+
+.loading-state {
+  margin: 0;
+  align-self: flex-start;
+  font-size: 0.94rem;
+}
+
+.message {
+  width: min(76%, 620px);
+  padding: 12px 14px;
+  border-radius: 8px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.message p {
+  margin: 4px 0 0;
+}
+
+.message-author {
+  color: #526977;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.message-user {
+  align-self: flex-end;
+  color: #ffffff;
+  background: #295c73;
+}
+
+.message-user .message-author {
+  color: #d9edf4;
+}
+
+.message-assistant {
+  align-self: flex-start;
+  border: 1px solid #d6e0e7;
+  background: #ffffff;
+}
+
+.error-message {
+  margin: 0 24px 16px;
+  border: 1px solid #d59a87;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #7c2f1c;
+  background: #fff0eb;
+}
+
+.composer {
+  display: grid;
+  gap: 8px;
+  padding: 18px 24px 24px;
+  border-top: 1px solid #dce5eb;
+  background: #ffffff;
+}
+
+.composer label {
+  color: #334b58;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.composer-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+
+textarea {
+  width: 100%;
+  min-height: 56px;
+  max-height: 160px;
+  resize: vertical;
+  border: 1px solid #b9c9d3;
+  border-radius: 8px;
+  padding: 12px;
+  color: #172026;
+  background: #fbfdfe;
+}
+
+textarea:focus {
+  outline: 3px solid rgba(191, 94, 67, 0.24);
+  border-color: #bf5e43;
+}
+
+button {
+  min-width: 92px;
+  min-height: 48px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0 18px;
+  color: #ffffff;
+  background: #bf5e43;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 3px solid rgba(41, 92, 115, 0.28);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    padding: 0;
+  }
+
+  .chat-panel {
+    height: 100vh;
+    min-height: 100vh;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .chat-header,
+  .message-list,
+  .composer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .session-pill {
+    display: none;
+  }
+
+  .message {
+    width: min(88%, 620px);
+  }
+
+  .composer-row {
+    grid-template-columns: 1fr;
+  }
+
+  button {
+    width: 100%;
+  }
+}
