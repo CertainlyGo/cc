@@ -7,12 +7,14 @@ describe("sendChatMessage", () => {
   });
 
   it("posts a chat request and returns the response", async () => {
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify({
+      message: "hello back",
+      sessionId: "session-1"
+    })));
+
     vi.stubGlobal(
       "fetch",
-      vi.fn(async () => new Response(JSON.stringify({
-        message: "hello back",
-        sessionId: "session-1"
-      })))
+      fetchMock
     );
 
     const result = await sendChatMessage({
@@ -20,6 +22,17 @@ describe("sendChatMessage", () => {
       sessionId: "session-1"
     });
 
+    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(fetchMock).toHaveBeenCalledWith("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: "hello",
+        sessionId: "session-1"
+      })
+    });
     expect(result).toEqual({
       message: "hello back",
       sessionId: "session-1"
