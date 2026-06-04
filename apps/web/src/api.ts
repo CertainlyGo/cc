@@ -1,6 +1,8 @@
 import type { ChatErrorResponse, ChatRequest, ChatResponse } from "@ts-react-agent/shared";
 
-export const apiBaseUrl = "";
+export function getApiBaseUrl(): string {
+  return import.meta.env.VITE_API_BASE_URL ?? "";
+}
 
 function isChatErrorResponse(value: unknown): value is ChatErrorResponse {
   return typeof value === "object"
@@ -18,7 +20,7 @@ async function readJson(response: Response): Promise<unknown> {
 }
 
 export async function sendChatMessage(request: ChatRequest): Promise<ChatResponse> {
-  const response = await fetch(`${apiBaseUrl}/api/chat`, {
+  const response = await fetch(`${getApiBaseUrl()}/api/chat`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

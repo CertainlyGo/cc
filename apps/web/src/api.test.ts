@@ -39,6 +39,25 @@ describe("sendChatMessage", () => {
     });
   });
 
+  it("uses the configured API base URL", async () => {
+    vi.stubEnv("VITE_API_BASE_URL", "http://localhost:3001");
+
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify({
+      message: "hello back"
+    })));
+
+    vi.stubGlobal(
+      "fetch",
+      fetchMock
+    );
+
+    await sendChatMessage({
+      message: "hello"
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith("http://localhost:3001/api/chat", expect.any(Object));
+  });
+
   it("throws a readable backend error", async () => {
     vi.stubGlobal(
       "fetch",
