@@ -1,5 +1,6 @@
 export type AppConfig = {
   openAiApiKey: string;
+  openAiBaseUrl?: string;
   openAiModel: string;
   port: number;
 };
@@ -22,6 +23,7 @@ export function readConfig(env: Env): AppConfig {
 
   return {
     openAiApiKey,
+    openAiBaseUrl: env.OPENAI_BASE_URL,
     openAiModel: env.OPENAI_MODEL ?? "gpt-4.1-mini",
     port
   };

@@ -8,7 +8,11 @@ Separated TypeScript agent app with a Fastify backend and React frontend.
 npm install
 ```
 
-Copy `.env.example` to `.env` and set `OPENAI_API_KEY`.
+Copy `.env.example` to `.env` and set the OpenAI-compatible model settings:
+
+- `OPENAI_API_KEY`: API key for your compatible provider.
+- `OPENAI_BASE_URL`: Base URL for the compatible API, such as `https://api.openai.com/v1` or another provider's `/v1` endpoint.
+- `OPENAI_MODEL`: Chat model name supported by that provider.
 
 ## Development
 

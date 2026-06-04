@@ -1,4 +1,5 @@
 import { ChatOpenAI } from "@langchain/openai";
+import type { ChatOpenAIFields } from "@langchain/openai";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import type { ChatRequest } from "@ts-react-agent/shared";
 import type { AppConfig } from "./config.js";
@@ -35,12 +36,23 @@ export function formatMessageContent(content: unknown): string {
   return JSON.stringify(content ?? "");
 }
 
-export function createAgentRunner(config: AppConfig) {
-  const model = new ChatOpenAI({
+export function createChatOpenAIOptions(config: AppConfig): ChatOpenAIFields {
+  return {
     apiKey: config.openAiApiKey,
     model: config.openAiModel,
-    temperature: 0
-  });
+    temperature: 0,
+    ...(config.openAiBaseUrl
+      ? {
+          configuration: {
+            baseURL: config.openAiBaseUrl
+          }
+        }
+      : {})
+  };
+}
+
+export function createAgentRunner(config: AppConfig) {
+  const model = new ChatOpenAI(createChatOpenAIOptions(config));
 
   const agent = createReactAgent({
     llm: model,

@@ -9,7 +9,20 @@ describe("readConfig", () => {
 
     expect(config.openAiApiKey).toBe("test-key");
     expect(config.openAiModel).toBe("gpt-4.1-mini");
+    expect(config.openAiBaseUrl).toBeUndefined();
     expect(config.port).toBe(3001);
+  });
+
+  it("reads an OpenAI-compatible base URL", () => {
+    const config = readConfig({
+      OPENAI_API_KEY: "compatible-key",
+      OPENAI_BASE_URL: "https://api.example.com/v1",
+      OPENAI_MODEL: "qwen-plus"
+    });
+
+    expect(config.openAiApiKey).toBe("compatible-key");
+    expect(config.openAiBaseUrl).toBe("https://api.example.com/v1");
+    expect(config.openAiModel).toBe("qwen-plus");
   });
 
   it("reports a missing API key", () => {
