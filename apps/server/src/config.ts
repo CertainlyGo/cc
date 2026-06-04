@@ -1,3 +1,5 @@
+import { config as loadDotenv } from "dotenv";
+
 export type AppConfig = {
   openAiApiKey: string;
   openAiBaseUrl?: string;
@@ -6,6 +8,16 @@ export type AppConfig = {
 };
 
 type Env = Partial<Record<string, string>>;
+
+export function loadEnvFile(
+  envPath: string | URL,
+  target?: Record<string, string>
+): void {
+  loadDotenv({
+    path: envPath,
+    ...(target ? { processEnv: target } : {})
+  });
+}
 
 export function readConfig(env: Env): AppConfig {
   const openAiApiKey = env.OPENAI_API_KEY;
