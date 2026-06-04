@@ -4,6 +4,7 @@ import { sendChatMessage } from "./api";
 describe("sendChatMessage", () => {
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
   });
 
   it("posts a chat request and returns the response", async () => {
