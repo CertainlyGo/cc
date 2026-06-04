@@ -49,4 +49,22 @@ describe("sendChatMessage", () => {
 
     await expect(sendChatMessage({ message: "" })).rejects.toThrow("message is required");
   });
+
+  it("throws a readable fallback for a non-JSON server error", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response("<html>server error</html>", { status: 500 }))
+    );
+
+    await expect(sendChatMessage({ message: "hello" })).rejects.toThrow("chat request failed");
+  });
+
+  it("throws a readable fallback for a non-JSON success response", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response("", { status: 200 }))
+    );
+
+    await expect(sendChatMessage({ message: "hello" })).rejects.toThrow("chat request failed");
+  });
 });

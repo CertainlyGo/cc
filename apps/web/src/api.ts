@@ -9,6 +9,14 @@ function isChatErrorResponse(value: unknown): value is ChatErrorResponse {
     && typeof value.error === "string";
 }
 
+async function readJson(response: Response): Promise<unknown> {
+  try {
+    return await response.json();
+  } catch {
+    throw new Error("chat request failed");
+  }
+}
+
 export async function sendChatMessage(request: ChatRequest): Promise<ChatResponse> {
   const response = await fetch(`${apiBaseUrl}/api/chat`, {
     method: "POST",
@@ -18,7 +26,7 @@ export async function sendChatMessage(request: ChatRequest): Promise<ChatRespons
     body: JSON.stringify(request)
   });
 
-  const payload: unknown = await response.json();
+  const payload = await readJson(response);
 
   if (!response.ok) {
     if (isChatErrorResponse(payload)) {

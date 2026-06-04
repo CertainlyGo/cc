@@ -23,28 +23,51 @@ function getStorage(): Storage | null {
     return null;
   }
 
-  const storage = window.localStorage;
+  try {
+    const storage = window.localStorage;
 
-  if (
-    typeof storage?.getItem !== "function"
-    || typeof storage.setItem !== "function"
-  ) {
+    if (
+      typeof storage?.getItem !== "function"
+      || typeof storage.setItem !== "function"
+    ) {
+      return null;
+    }
+
+    return storage;
+  } catch {
     return null;
   }
+}
 
-  return storage;
+function readStoredSessionId(): string | null {
+  const storage = getStorage();
+
+  try {
+    return storage?.getItem(sessionStorageKey) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function writeStoredSessionId(sessionId: string): void {
+  const storage = getStorage();
+
+  try {
+    storage?.setItem(sessionStorageKey, sessionId);
+  } catch {
+    // Keep the in-memory session state when browser storage is unavailable.
+  }
 }
 
 function getStoredSessionId(): string {
-  const storage = getStorage();
-  const existing = storage?.getItem(sessionStorageKey);
+  const existing = readStoredSessionId();
 
   if (existing) {
     return existing;
   }
 
   const sessionId = createId("session");
-  storage?.setItem(sessionStorageKey, sessionId);
+  writeStoredSessionId(sessionId);
   return sessionId;
 }
 
@@ -83,7 +106,7 @@ export default function App() {
         sessionId
       });
 
-      getStorage()?.setItem(sessionStorageKey, response.sessionId);
+      writeStoredSessionId(response.sessionId);
       setSessionId(response.sessionId);
       setMessages((current) => [
         ...current,
